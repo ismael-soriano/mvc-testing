@@ -34,14 +34,16 @@ namespace Test
                 new Product() {Name = "pera"}
             };
             repository.Expects.One.Method(c => c.GetAll()).WillReturn(products);
+            repository.Expects.One.MethodWith(c => c.Get(1)).WillReturn(new Product() { Name ="Antonio"});
             unitOfWork.Expects.One.Method(c => c.Dispose());
 
             // Act
             var result = ((productController.Index() as ViewResult).Model) as List<Product>;
+            productController.Edit(1);
             productController.Dispose();
             // Assert
             Assert.AreEqual(1, result.Count);
-            //Assert.AreEqual("pera", result);
+            Assert.AreEqual("pera", result[0].Name);
         }
     }
 }
